@@ -14,12 +14,16 @@ module Control.Kernmantle.Rope.Internal where
 import Control.Category
 import Control.Arrow
 import Control.Monad.Trans.Reader
-import Data.Profunctor hiding (rmap)
 import Data.Bifunctor
 import Data.Biapplicative
 import Data.Bifunctor.Tannen
 import Data.Functor.Identity
+import Data.Profunctor hiding (rmap)
+import qualified Data.Profunctor as Pro
+import Data.Profunctor.Choice
+import Data.Profunctor.Composition
 import Data.Profunctor.Cayley
+import Data.Profunctor.Strong
 import Data.Vinyl hiding ((<+>))
 import Data.Vinyl.TypeLevel
 import GHC.TypeLits
@@ -83,6 +87,20 @@ newtype RopeRunner (record::RopeRec) (mantle::[Strand]) (interp::BinEff) (core::
 
   deriving (Profunctor, Strong, Choice)
     via Cayley ((->) (record (Weaver interp) mantle)) core
+
+newtype CPSRunner (record::RopeRec) (mantle::[Strand]) (interp::BinEff) (core::BinEff) a b =
+  CPSRunner (record (Weaver interp) mantle -> Tambara (TambaraSum (Rift core core)) a b)
+
+  deriving (Category, Profunctor, Choice, Strong)
+    via Tannen ((->) (record (Weaver interp) mantle))
+               (Tambara (TambaraSum (Rift core core)))
+
+instance (Profunctor core) => Arrow (CPSRunner record mantle interp core) where
+  arr f = Pro.rmap f id
+  first = Pro.first'
+
+instance (Profunctor core) => ArrowChoice (CPSRunner record mantle interp core) where
+  left = Pro.left'
 
 instance (RMap m) => EffProfunctor (RopeRunner Rec m) where
   effdimap f g (RopeRunner run) = RopeRunner $
