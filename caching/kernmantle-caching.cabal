@@ -1,0 +1,84 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 2d1a5e48194f165a84854866c7429e0088c4d0a3d7ae73e8a2283eea62d72b17
+
+name:           kernmantle-caching
+version:        0.1.0.0
+synopsis:       Cache parts of a Kernmantle pipeline via cas-store
+description:    Please see the README on GitHub at <https://github.com/YPares/kernmantle#readme>
+category:       Control
+homepage:       https://github.com/YPares/kernmantle#readme
+bug-reports:    https://github.com/YPares/kernmantle/issues
+author:         Yves Parès
+maintainer:     yves.pares@gmail.com
+copyright:      2019 Yves Parès
+license:        BSD3
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/YPares/kernmantle
+
+library
+  exposed-modules:
+      Control.Kernmantle.Caching
+  other-modules:
+      Paths_kernmantle_caching
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , cas-hashable
+    , cas-store
+    , exceptions
+    , kernmantle
+    , monad-control
+    , path
+    , path-io
+    , store
+  default-language: Haskell2010
+
+executable exCaching
+  main-is: examples/ExCaching.hs
+  other-modules:
+      Paths_kernmantle_caching
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , cas-hashable
+    , cas-store
+    , exceptions
+    , kernmantle
+    , kernmantle-caching
+    , monad-control
+    , optparse-applicative
+    , path
+    , path-io
+    , profunctors
+    , store
+    , transformers
+  default-language: Haskell2010
+
+executable exCachingAlt
+  main-is: examples/ExCachingAlt.hs
+  other-modules:
+      Paths_kernmantle_caching
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , cas-hashable
+    , cas-store
+    , containers
+    , exceptions
+    , kernmantle
+    , monad-control
+    , optparse-applicative
+    , path
+    , path-io
+    , profunctors
+    , store
+  default-language: Haskell2010
